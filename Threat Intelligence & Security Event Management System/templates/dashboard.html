@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+
+<section class="stat-row">
+  <div class="stat-card">
+    <div class="stat-label">Total Alerts</div>
+    <div class="stat-value">{{ stats.total }}</div>
+  </div>
+  <div class="stat-card stat-card--open">
+    <div class="stat-label">Open</div>
+    <div class="stat-value">{{ stats.open }}</div>
+  </div>
+  <div class="stat-card stat-card--critical">
+    <div class="stat-label">Critical</div>
+    <div class="stat-value">{{ stats.by_severity.get('critical', 0) }}</div>
+  </div>
+  <div class="stat-card stat-card--high">
+    <div class="stat-label">High</div>
+    <div class="stat-value">{{ stats.by_severity.get('high', 0) }}</div>
+  </div>
+</section>
+
+<section class="panel-row">
+  <div class="panel severity-panel">
+    <h2>Severity distribution</h2>
+    {% set order = ['critical', 'high', 'medium', 'low'] %}
+    {% set total = stats.total if stats.total > 0 else 1 %}
+    <div class="severity-bar">
+      {% for sev in order %}
+        {% set count = stats.by_severity.get(sev, 0) %}
+        {% if count > 0 %}
+        <div class="severity-segment sev-{{ sev }}" style="width: {{ (count / total * 100) | round(1) }}%;" title="{{ sev }}: {{ count }}"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <ul class="severity-legend">
+      {% for sev in order %}
+      <li><span class="dot sev-{{ sev }}"></span>{{ sev|capitalize }} <span class="muted">{{ stats.by_severity.get(sev, 0) }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Alerts by rule</h2>
+    <table class="mini-table">
+      {% for rule, count in stats.by_rule.items() %}
+      <tr>
+        <td class="mono">{{ rule }}</td>
+        <td class="num">{{ count }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Top source IPs</h2>
+    <table class="mini-table">
+      {% for row in stats.top_ips %}
+      <tr>
+        <td class="mono">{{ row.src_ip }}</td>
+        <td class="num">{{ row.c }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <h2>Recent alerts</h2>
+    <a href="{{ url_for('alerts') }}" class="link-button">View all →</a>
+  </div>
+  <table class="alert-table">
+    <thead>
+      <tr><th>Severity</th><th>Rule</th><th>Title</th><th>Source IP</th><th>User</th><th>Time</th></tr>
+    </thead>
+    <tbody>
+      {% for a in recent_alerts %}
+      <tr class="row-sev-{{ a.severity }}">
+        <td><span class="badge sev-{{ a.severity }}">{{ a.severity }}</span></td>
+        <td class="mono">{{ a.rule }}</td>
+        <td>{{ a.title }}</td>
+        <td class="mono">{{ a.src_ip or '—' }}</td>
+        <td class="mono">{{ a.user or '—' }}</td>
+        <td class="mono muted">{{ a.event_timestamp }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="empty-state">No alerts yet. Run <code>python run_pipeline.py --source data/sample_logs.jsonl</code> to populate data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

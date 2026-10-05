@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Alerts{% endblock %}
+{% block content %}
+
+<section class="panel-header">
+  <h2>All alerts</h2>
+  <form class="filter-form" method="get">
+    <select name="severity" onchange="this.form.submit()">
+      <option value="">All severities</option>
+      {% for sev in severities %}
+      <option value="{{ sev }}" {{ 'selected' if current_severity == sev }}>{{ sev|capitalize }}</option>
+      {% endfor %}
+    </select>
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All statuses</option>
+      <option value="open" {{ 'selected' if current_status == 'open' }}>Open</option>
+      <option value="acknowledged" {{ 'selected' if current_status == 'acknowledged' }}>Acknowledged</option>
+      <option value="closed" {{ 'selected' if current_status == 'closed' }}>Closed</option>
+    </select>
+  </form>
+</section>
+
+<section class="panel">
+  <table class="alert-table detailed">
+    <thead>
+      <tr><th>Severity</th><th>Rule</th><th>Title</th><th>Description</th><th>Src IP</th><th>User</th><th>Time</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for a in alerts %}
+      <tr class="row-sev-{{ a.severity }}">
+        <td><span class="badge sev-{{ a.severity }}">{{ a.severity }}</span></td>
+        <td class="mono">{{ a.rule }}</td>
+        <td>{{ a.title }}</td>
+        <td class="description-cell">{{ a.description }}</td>
+        <td class="mono">{{ a.src_ip or '—' }}</td>
+        <td class="mono">{{ a.user or '—' }}</td>
+        <td class="mono muted">{{ a.event_timestamp }}</td>
+        <td><span class="status status-{{ a.status }}">{{ a.status }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('update_status', alert_id=a.id) }}" class="inline-form">
+            <select name="status" onchange="this.form.submit()">
+              <option value="open" {{ 'selected' if a.status == 'open' }}>Open</option>
+              <option value="acknowledged" {{ 'selected' if a.status == 'acknowledged' }}>Acknowledge</option>
+              <option value="closed" {{ 'selected' if a.status == 'closed' }}>Close</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="9" class="empty-state">No alerts match this filter.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

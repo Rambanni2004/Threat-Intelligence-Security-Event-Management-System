@@ -1,0 +1,20 @@
+{
+  "malicious_ips": [
+    {"ip": "185.220.101.13", "category": "tor-exit-node", "confidence": 80, "source": "sample-feed"},
+    {"ip": "45.155.204.77", "category": "known-scanner", "confidence": 90, "source": "sample-feed"},
+    {"ip": "194.26.29.150", "category": "c2-server", "confidence": 95, "source": "sample-feed"},
+    {"ip": "103.99.0.203", "category": "brute-force-source", "confidence": 85, "source": "sample-feed"},
+    {"ip": "91.240.118.192", "category": "malware-distribution", "confidence": 92, "source": "sample-feed"},
+    {"ip": "198.98.51.100", "category": "tor-exit-node", "confidence": 75, "source": "sample-feed"}
+  ],
+  "malicious_domains": [
+    {"domain": "malicious-update-server.net", "category": "malware-c2", "confidence": 90},
+    {"domain": "secure-login-verify.com", "category": "phishing", "confidence": 88},
+    {"domain": "cdn-assets-cache.info", "category": "malware-distribution", "confidence": 85}
+  ],
+  "malicious_file_hashes": [
+    {"sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b85", "category": "trojan", "confidence": 70},
+    {"sha256": "5d41402abc4b2a76b9719d911017c592c4a4f4a4b4c1b4a5b6c7d8e9f0a1b2c", "category": "ransomware", "confidence": 96}
+  ],
+  "last_updated": "2026-07-01T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Sentinel{% endblock %} — Threat Intel &amp; SIEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">SENTINEL</span>
+      <span class="brand-sub">Threat Intel &amp; Security Event Management</span>
+    </div>
+    <nav class="topnav">
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.path == url_for('dashboard') else '' }}">Overview</a>
+      <a href="{{ url_for('alerts') }}" class="{{ 'active' if request.path == url_for('alerts') else '' }}">Alerts</a>
+      <a href="https://github.com/" target="_blank" rel="noopener" class="repo-link">View on GitHub ↗</a>
+    </nav>
+  </header>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    Sentinel SIEM prototype · local SQLite store · rules engine v1
+  </footer>
+</div>
+</body>
+</html>
